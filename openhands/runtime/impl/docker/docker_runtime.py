@@ -501,7 +501,10 @@ class DockerRuntime(ActionExecutionClient):
         if not token:
             return None
 
-        vscode_url = f'http://localhost:{self._vscode_port}/?tkn={token}&folder={self.config.workspace_mount_path_in_sandbox}'
+        workspace_addr = os.environ.get('DOCKER_WORKSPACE_ADDR', 'localhost')
+
+        # For proxy setups, use path-based routing instead of port-based
+        vscode_url = f'https://{workspace_addr}/workspace/{self._vscode_port}/?tkn={token}&folder={self.config.workspace_mount_path_in_sandbox}'
         return vscode_url
 
     @property
